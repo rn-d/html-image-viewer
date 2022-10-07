@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <body>
-	<h3> rnd's html image viewer, ver 0.1alpha, 10/2022 </h3>
-	INSTRUCTIONS:  input folder path where images are (press enter), then in file dialog select multiple images and press enter. Its possible to change display modes (displaymode = 0 will touch window from inside, 1 will stretch to window)
-	You can use left/right keys to cycle images or Home/Delete keys to jump to first/last image.
+	<h3> rnd's html image viewer, ver 0.2alpha, 07/10/2022 </h3>
+	INSTRUCTIONS:  input folder path where images are (press enter), then in file dialog select multiple images and press enter. Its possible to change display modes (press keys - 1 will touch window from inside, 2 will stretch to window, 3 fit width, 4 original size size)
+	Use left/right keys to cycle images or Home/Delete keys to jump to first/last image.
 	<br>
 	<br>
 	<input id="filepath" placeholder="Enter filepath where image files are" >
@@ -25,20 +25,26 @@
 	//add global click event to whole div element to figure out what image was clicked on
 	document.getElementById("imgs").addEventListener('click', (event) => 
 	{
-		//alert(event.target.src)
+		if (Number.isNaN(event.target.id)) return
 		idx = Number(event.target.id)
+		//console.log("click, idx = " + idx)
 		setimage(imglist[idx])
 	})
 	
 	//add global key event
 	document.addEventListener('keydown', (event) => 
 	{
-		//alert(event.keyCode)
-		if (listlength<1) return;
-		if (event.keyCode == 39) idx=idx+1
+		//console.log(event.keyCode)
+		if (listlength<1) return; // no images, nothing to do
+		
+		if	    (event.keyCode == 39) idx=idx+1
 		else if (event.keyCode == 37) idx=idx-1
 		else if (event.keyCode == 45) idx = 0
 		else if (event.keyCode == 46) idx = listlength-1
+		else if (event.keyCode == 49) displaymode = 0
+		else if (event.keyCode == 50) displaymode = 1
+		else if (event.keyCode == 51) displaymode = 2
+		else if (event.keyCode == 52) displaymode = 3
 		
 		if (idx<0) idx = listlength-1
 		else if (idx>=listlength) idx = 0
@@ -75,9 +81,8 @@
 		img.onload = function() { // after image actually loaded read dimensions
 			var cwidth = window.innerWidth // inner dimension of browser window
 			var cheight = window.innerHeight
-		  
-			var width = img.width;
-			var height = img.height;
+			var width = img.naturalWidth; // image dimension
+			var height = img.naturalHeight;
 			
 			if (displaymode == 0){ // touch from inside
 				var wf = 1.; var hf = 1.;
@@ -89,11 +94,16 @@
 
 				width = f*width;height = f*height;
 			}
-			else if (displaymode == 1) {
+			else if (displaymode == 1) { // stretch to window
 				width =  cwidth
 				height = cheight
 			}
-			
+			else if (displaymode == 2) { // fit width
+				var f =  cwidth/width
+				width = width*f
+				height = height*f
+			}
+
 			img.width = width
 			img.height = height
 		}
