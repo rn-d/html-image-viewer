@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <body>
+	<font color="white">  
+	<body style="background-color:black;">
+	
 	<h3> rnd's html image viewer, ver 0.2alpha, 07/10/2022 </h3>
 	INSTRUCTIONS:  input folder path where images are (press enter), then in file dialog select multiple images and press enter. Its possible to change display modes (press keys - 1 will touch window from inside, 2 will stretch to window, 3 fit width, 4 original size size)
 	Use left/right keys to cycle images or Home/Delete keys to jump to first/last image.
@@ -12,7 +15,8 @@
 	<div id="imgs"> </div>
 	<br>
 	<div id = "imgdescription"> </div>
-	<a id = "selectedimagea" href = ""> <img  id = "selectedimage"> </img> </a>
+	<a id = "selectedimagea" href = ""> </a> <img  id = "selectedimage">
+	
 	
 
 <script>
@@ -20,9 +24,9 @@
 	var imglist = []
 	var idx = 0
 	var listlength = 0
-	var displaymode = 0 // 0:touch inside, 1: stretch/shrink to window
+	var displaymode = 0 // 0:touch inside, 1: stretch/shrink to window, 2:fit width, 3: original
 	
-	//add global click event to whole div element to figure out what image was clicked on
+	//add click event to whole div element to figure out what image was clicked on
 	document.getElementById("imgs").addEventListener('click', (event) => 
 	{
 		if (Number.isNaN(event.target.id)) return
@@ -31,7 +35,7 @@
 		setimage(imglist[idx])
 	})
 	
-	//add global key event
+	//add global key event for cycling through images and more
 	document.addEventListener('keydown', (event) => 
 	{
 		//console.log(event.keyCode)
@@ -71,10 +75,10 @@
 	
 	function setimage (imagename){
 		var imgurl = "file://"+filepath+"\\"+imagename
-		document.getElementById("imgdescription").innerHTML = "img "+(idx+1)+"/" + listlength +" : " + imagename
-		document.getElementById("selectedimagea").href = imgurl
-		
 		var img = document.getElementById("selectedimage")
+		
+		
+		document.getElementById("selectedimagea").href = imgurl
 		img.src = imgurl
 		
 			
@@ -84,14 +88,15 @@
 			var width = img.naturalWidth; // image dimension
 			var height = img.naturalHeight;
 			
+			document.getElementById("imgdescription").innerHTML = "img "+(idx+1)+"/" + listlength +" : " + imagename+" , " + width + "x"+ height
+			
 			if (displaymode == 0){ // touch from inside
 				var wf = 1.; var hf = 1.;
-				if (width>cwidth) wf = 1.*cwidth/width
-				if (height>cheight) hf = 1.*cheight/height
-				var f = 1.;
-				if (wf<hf) {f=wf}
-				else if (hf<wf) {f=hf}
-
+				
+				wf = 1.*cwidth/width
+				hf = 1.*cheight/height
+				if (wf<hf) f=wf; else f=hf;
+			
 				width = f*width;height = f*height;
 			}
 			else if (displaymode == 1) { // stretch to window
