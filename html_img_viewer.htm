@@ -4,11 +4,12 @@
 	<font color="white">  
 	<body style="background-color:black;">
 	
-	<h3> rnd's html image viewer, ver 0.2alpha, 07/10/2022 </h3>
-	INSTRUCTIONS:  input folder path where images are (press enter), then in file dialog select multiple images and press enter. Its possible to change display modes (press keys - 1 will touch window from inside, 2 will stretch to window, 3 fit width, 4 original size size)
+	<h3> Html Image Viewer, ver 0.3, 08/10/2022 </h3>
+	INSTRUCTIONS:  1. optionally change image folder 2. in file dialog select multiple images and press enter. 3. Its possible to change display modes (press keys - 1 will touch window from inside, 2 will stretch to window, 3 fit width, 4 original size size)
 	Use left/right keys to cycle images or Home/Delete keys to jump to first/last image.
 	<br>
 	<br>
+	images folder 
 	<input id="filepath" placeholder="Enter filepath where image files are" >
 	<input id="fileselect" type="file"  multiple>
 	<br>
@@ -25,6 +26,14 @@
 	var idx = 0
 	var listlength = 0
 	var displaymode = 0 // 0:touch inside, 1: stretch/shrink to window, 2:fit width, 3: original
+
+	function get_path (){
+		var patht = window.location.pathname;
+		var matches = patht.match(RegExp("/[a-z0-9:_]+","gi"));matches.pop()
+		return matches.join("").slice(1)
+	}
+	filepath = get_path();document.getElementById("filepath").value = filepath
+
 	
 	//add click event to whole div element to figure out what image was clicked on
 	document.getElementById("imgs").addEventListener('click', (event) => 
